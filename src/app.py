@@ -36,11 +36,19 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+# AQUI EMPIEZAN LOS ENDPOINTS
+
 @app.route('/user', methods=['GET'])
 def handle_hello():
 
+# querys o consultas
+    users_query = User.query.all()
+    results = list(map(lambda item: item.serialize(),users_query))
+   
+
     response_body = {
-        "msg": "Hello, this is your GET /user response "
+        "msg": "ok",
+        "results": results
     }
 
     return jsonify(response_body), 200
