@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User , Personaje , Planeta
 #from models import Person
 
 app = Flask(__name__)
@@ -36,8 +36,8 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-# AQUI EMPIEZAN LOS ENDPOINTS
-
+# ----------------------AQUI EMPIEZAN LOS ENDPOINTS -------------------------------
+# OBTENEMOS TODOS LOS USUARIOS
 @app.route('/user', methods=['GET'])
 def handle_hello():
 
@@ -49,10 +49,9 @@ def handle_hello():
         "msg": "ok",
         "results": results
     }
-
     return jsonify(response_body), 200
 
-# OBTINE LOS DATOS DE UN USUARIO
+# OBTINER DATOS DE UN USUARIO
 @app.route('/user/<int:user_id>', methods=['GET'])
 def get_info_user(user_id):
 
@@ -62,9 +61,9 @@ def get_info_user(user_id):
         "msg": "ok",
         "results": user_query.serialize()
     }
-
     return jsonify(response_body), 200
 
+# CREAR UN USUARIO EN EL CASO DE QUE NO ESTE EN LA DB
 @app.route('/user', methods=['POST'])
 def create_user():
     request_body=request.json
@@ -84,6 +83,96 @@ def create_user():
         return jsonify(response_body), 200
     else:
         return jsonify({"msg":"Usuario ya existe"}), 400
+
+# OBTENER TODOS LOS PERSONAJES
+@app.route('/personaje', methods=['GET'])
+def get_all_info_personajes():
+
+    personajes_query = Personaje.query.all()
+    results = list(map(lambda item: item.serialize(),personajes_query))
+
+    response_body = {
+        "msg": "ok",
+        "results": results
+    }
+    return jsonify(response_body), 200
+
+# OBTENER DATOS DE UN SOLO PERSONAJE
+@app.route('/personaje/<int:personaje_id>', methods=['GET'])
+def get_info_personaje(personaje_id):
+
+    personaje_query = Personaje.query.filter_by(id=personaje_id).first()
+  
+    response_body = {
+        "msg": "ok",
+        "results": personaje_query.serialize()
+    }
+    return jsonify(response_body), 200
+
+# CREAR UN PERSONAJE EN EL CASO DE QUE NO ESTE EN LA DB
+@app.route('/personaje', methods=['POST'])
+def create_personaje():
+    request_body=request.json
+    personaje_query = Personaje.query.filter_by(name=request_body["name"]).first()
+    if personaje_query is None:
+
+        personaje = Personaje(name=request_body["name"])
+        db.session.add(personaje)
+        db.session.commit()
+  
+        response_body = {
+            "msg": "El personaje ha sido creado con éxito",
+
+        }
+
+        return jsonify(response_body), 200
+    else:
+        return jsonify({"msg":"Personaje ya existe"}), 400
+
+# OBTENER TODOS LOS PLANETAS
+@app.route('/planeta', methods=['GET'])
+def get_all_info_planetas():
+
+    planeta_query = Planeta.query.all()
+    results = list(map(lambda item: item.serialize(),planeta_query))
+
+    response_body = {
+        "msg": "ok",
+        "results": results
+    }
+    return jsonify(response_body), 200
+
+# OBTENER DATOS DE UN SOLO PLANETA
+@app.route('/planeta/<int:planeta_id>', methods=['GET'])
+def get_info_planeta(planeta_id):
+
+    planeta_query = Planeta.query.filter_by(id=planeta_id).first()
+  
+    response_body = {
+        "msg": "ok",
+        "results": planeta_query.serialize()
+    }
+    return jsonify(response_body), 200
+
+# CREAR UN PLANETA EN EL CASO DE QUE NO ESTE EN LA DB
+@app.route('/planeta', methods=['POST'])
+def create_planeta():
+    request_body=request.json
+    planeta_query = Planeta.query.filter_by(name=request_body["name"]).first()
+    if planeta_query is None:
+
+        planeta = Planeta(name=request_body["name"])
+        db.session.add(planeta)
+        db.session.commit()
+  
+        response_body = {
+            "msg": "El planeta ha sido creado con éxito",
+
+        }
+
+        return jsonify(response_body), 200
+    else:
+        return jsonify({"msg":"Planeta ya existe"}), 400
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
