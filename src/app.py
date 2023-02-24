@@ -43,7 +43,6 @@ def handle_hello():
 
     users_query = User.query.all()
     results = list(map(lambda item: item.serialize(),users_query))
-    print(results)
 
     response_body = {
         "msg": "ok",
@@ -62,6 +61,19 @@ def get_info_user(user_id):
         "results": user_query.serialize()
     }
     return jsonify(response_body), 200
+
+# OBTENER LISTA DE FAVORITOS DE UN USUARIO
+# @app.route('/user/<int:user_id>/favorites', methods=['GET'])
+# def get_info_user_favorites(user_id):
+
+#     user_query = User.query.filter_by(id=user_id).first()
+#     favorite_personaje_results = list(map(lambda item: item.serialize(),user_query))
+  
+#     response_body = {
+#         "msg": "ok",
+#         "favorite_results": user_query.serialize()
+#     }
+#     return jsonify(response_body), 200
 
 # CREAR UN USUARIO EN EL CASO DE QUE NO ESTE EN LA DB
 @app.route('/user', methods=['POST'])
