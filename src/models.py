@@ -3,26 +3,32 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=False, nullable=False)
-    favorite_personaje_name = db.Column(db.String(250), unique=False, nullable=False)
-    favorite_planet_name = db.Column(db.String(250), unique=False, nullable=False)
-    # is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+     __tablename__ = 'usuario'
+    
+     id = db.Column(db.Integer, primary_key=True)
+     email = db.Column(db.String(120), unique=True, nullable=False)
+     password = db.Column(db.String(80), unique=False, nullable=False)
+     name = db.Column(db.String(250), nullable=False)
+     favoritousuario = db.relationship('Favorito', backref='usuario', lazy=True)
 
-    def __repr__(self):
+     def __repr__(self):
         return '<User %r>' % self.id
 
-    def serialize(self):
+     def serialize(self):
         return {
             "id": self.id,
             "email": self.email,
+            "name": self.name,
+            # "favorito_id": self.favorito_id,
+            "favoritousuario": self.favoritousuario
             # do not serialize the password, its a security breach
         }
 
 class Personaje(db.Model):
+    __tablename__ = 'personaje'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
+    favoritopersonaje = db.relationship('Favorito', backref='personaje', lazy=True)
 
     
     def __repr__(self):
@@ -31,12 +37,15 @@ class Personaje(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "favoritopersonaje": self.favoritopersonaje
         }
 
 class Planeta(db.Model):
+    __tablename__ = 'planeta'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
+    favoritoplaneta = db.relationship('Favorito', backref='planeta', lazy=True)
 
     
     def __repr__(self):
@@ -45,5 +54,25 @@ class Planeta(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "favoritoplaneta": self.favoritoplaneta
+        }
+
+class Favorito(db.Model):
+    __tablename__ = 'favorito'
+    id = db.Column(db.Integer, primary_key=True)
+    personaje_id = db.Column(db.Integer,  db.ForeignKey('planeta.id'),nullable=False)
+    planeta_id = db.Column(db.Integer,  db.ForeignKey('personaje.id'),nullable=False)
+    usuario_id = db.Column(db.Integer,  db.ForeignKey('usuario.id'),nullable=False)
+
+    
+    def __repr__(self):
+        return '<Favorito %r>' % self.id
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "personaje_id": self.personaje_id,
+            "planeta_id": self.planeta_id,
+            "usuario_id": self.usuario_id
         }

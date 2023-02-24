@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User , Personaje , Planeta
+from models import db, User , Personaje , Planeta , Favorito
 #from models import Person
 
 app = Flask(__name__)
@@ -185,6 +185,40 @@ def create_planeta():
         return jsonify(response_body), 200
     else:
         return jsonify({"msg":"Planeta ya existe"}), 400
+
+
+# OBTENER TODOS LOS FAVORITOS
+@app.route('/users/favorites', methods=['GET'])
+def get_all_info_favoritos():
+
+    favoritos_query = Favorito.query.all()
+    results = list(map(lambda item: item.serialize(),favoritos_query))
+
+    response_body = {
+        "msg": "ok",
+        "results": results
+    }
+    return jsonify(response_body), 200
+
+# OBTENER UN FAVORITO
+@app.route('/favorite', methods=['POST'])
+def create_favorito():
+    request_body=request.json
+    # favorito_query = Favorito.query.filter_by(id=request_body["id"]).first()
+    # if favorito_query is None:
+
+    favorito = Favorito(planeta_id=request_body["planeta_id"],personaje_id=request_body["personaje_id"],usuario_id=request_body["usuario_id"])
+    db.session.add(favorito)
+    db.session.commit()
+  
+    response_body = {
+            "msg": "El favorito ha sido creado con éxito",
+
+        }
+
+    return jsonify(response_body), 200
+        # else:
+        # return jsonify({"msg":"Este favorito ya existe"}), 400
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
