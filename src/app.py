@@ -231,6 +231,21 @@ def create_planeta_favorito(planeta_id):
         }
     return jsonify(response_body), 200
 
+# CREAR PERSONAJE FAVORITO
+@app.route('/favorite/personaje/<int:personaje_id>', methods=['POST'])
+def create_personaje_favorito(personaje_id):
+    request_body=request.json
+    # planeta_favorito = Planeta.query.filter_by(id=planeta_id).first()
+    personaje_favorito = Favorito(usuario_id=request_body["usuario_id"],personaje_id = personaje_id)
+
+    db.session.add(personaje_favorito)
+    db.session.commit()
+  
+    response_body = {
+            "msg": "El personaje ha sido creado como favorito con éxito",
+        }
+    return jsonify(response_body), 200
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

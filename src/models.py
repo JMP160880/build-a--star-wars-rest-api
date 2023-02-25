@@ -71,11 +71,13 @@ class Favorito(db.Model):
 
     def serialize(self):
         query_planeta=Planeta.query.filter_by(id=self.planeta_id).first()
+        query_personaje=Personaje.query.filter_by(id=self.personaje_id).first()
 
         return {
             "id": self.id,
             "personaje_id": self.personaje_id,
             "planeta_id": self.planeta_id,
             "info_planeta":query_planeta.serialize(),
+            "imfo_personaje":query_personaje.serialize(),
             "usuario_id": self.usuario_id
         }
