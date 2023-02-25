@@ -55,14 +55,14 @@ class Planeta(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "favoritoplaneta": self.favoritoplaneta
+            # "favoritoplaneta": self.favoritoplaneta
         }
 
 class Favorito(db.Model):
     __tablename__ = 'favorito'
     id = db.Column(db.Integer, primary_key=True)
-    personaje_id = db.Column(db.Integer,  db.ForeignKey('planeta.id'),nullable=False)
-    planeta_id = db.Column(db.Integer,  db.ForeignKey('personaje.id'),nullable=False)
+    personaje_id = db.Column(db.Integer,  db.ForeignKey('planeta.id'),nullable=True)
+    planeta_id = db.Column(db.Integer,  db.ForeignKey('personaje.id'),nullable=True)
     usuario_id = db.Column(db.Integer,  db.ForeignKey('usuario.id'),nullable=False)
 
     
@@ -70,9 +70,12 @@ class Favorito(db.Model):
         return '<Favorito %r>' % self.id
 
     def serialize(self):
+        query_planeta=Planeta.query.filter_by(id=self.planeta_id).first()
+
         return {
             "id": self.id,
             "personaje_id": self.personaje_id,
             "planeta_id": self.planeta_id,
+            "info_planeta":query_planeta.serialize(),
             "usuario_id": self.usuario_id
         }

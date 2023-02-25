@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 import os
-from flask import Flask, request, jsonify, url_for
+from flask import Flask, request, jsonify, url_for,json
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
@@ -200,25 +200,36 @@ def get_all_info_favoritos():
     }
     return jsonify(response_body), 200
 
-# OBTENER UN FAVORITO
-@app.route('/favorite', methods=['POST'])
-def create_favorito():
-    request_body=request.json
-    # favorito_query = Favorito.query.filter_by(id=request_body["id"]).first()
-    # if favorito_query is None:
+# OBTENER UN FAVORITO CON TODOS LOS CAMPOS
+# @app.route('/favorite', methods=['POST'])
+# def create_favorito():
+#     request_body=request.json
 
-    favorito = Favorito(planeta_id=request_body["planeta_id"],personaje_id=request_body["personaje_id"],usuario_id=request_body["usuario_id"])
-    db.session.add(favorito)
+#     favorito = Favorito(planeta_id=request_body["planeta_id"],personaje_id=request_body["personaje_id"],usuario_id=request_body["usuario_id"])
+#     db.session.add(favorito)
+#     db.session.commit()
+  
+#     response_body = {
+#             "msg": "El favorito ha sido creado con éxito",
+
+#         }
+
+#     return jsonify(response_body), 200
+
+# CREAR PLANETA FAVORITO
+@app.route('/favorite/planeta/<int:planeta_id>', methods=['POST'])
+def create_planeta_favorito(planeta_id):
+    request_body=request.json
+    # planeta_favorito = Planeta.query.filter_by(id=planeta_id).first()
+    planeta_favorito = Favorito(usuario_id=request_body["usuario_id"],planeta_id = planeta_id)
+
+    db.session.add(planeta_favorito)
     db.session.commit()
   
     response_body = {
-            "msg": "El favorito ha sido creado con éxito",
-
+            "msg": "El planeta ha sido creado como favorito con éxito",
         }
-
     return jsonify(response_body), 200
-        # else:
-        # return jsonify({"msg":"Este favorito ya existe"}), 400
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
