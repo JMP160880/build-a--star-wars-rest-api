@@ -62,19 +62,6 @@ def get_info_user(user_id):
     }
     return jsonify(response_body), 200
 
-# OBTENER LISTA DE FAVORITOS DE UN USUARIO
-# @app.route('/user/<int:user_id>/favorites', methods=['GET'])
-# def get_info_user_favorites(user_id):
-
-#     user_query = User.query.filter_by(id=user_id).first()
-#     favorite_personaje_results = list(map(lambda item: item.serialize(),user_query))
-  
-#     response_body = {
-#         "msg": "ok",
-#         "favorite_results": user_query.serialize()
-#     }
-#     return jsonify(response_body), 200
-
 # CREAR UN USUARIO EN EL CASO DE QUE NO ESTE EN LA DB
 @app.route('/user', methods=['POST'])
 def create_user():
@@ -185,36 +172,6 @@ def create_planeta():
         return jsonify(response_body), 200
     else:
         return jsonify({"msg":"Planeta ya existe"}), 400
-
-
-# OBTENER TODOS LOS FAVORITOS
-# @app.route('/users/favorites', methods=['GET'])
-# def get_all_info_favoritos():
-
-#     favoritos_query = Favorito.query.all()
-#     results = list(map(lambda item: item.serialize(),favoritos_query))
-
-#     response_body = {
-#         "msg": "ok",
-#         "results": results
-#     }
-#     return jsonify(response_body), 200
-
-# OBTENER UN FAVORITO CON TODOS LOS CAMPOS
-# @app.route('/favorite', methods=['POST'])
-# def create_favorito():
-#     request_body=request.json
-
-#     favorito = Favorito(planeta_id=request_body["planeta_id"],personaje_id=request_body["personaje_id"],usuario_id=request_body["usuario_id"])
-#     db.session.add(favorito)
-#     db.session.commit()
-  
-#     response_body = {
-#             "msg": "El favorito ha sido creado con éxito",
-
-#         }
-
-#     return jsonify(response_body), 200
 
 # CREAR PLANETA FAVORITO
 @app.route('/favorite/planeta/<int:planeta_id>', methods=['POST'])
