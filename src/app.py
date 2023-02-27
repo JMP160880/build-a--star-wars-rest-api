@@ -177,7 +177,7 @@ def create_planeta():
 @app.route('/favorite/planeta/<int:planeta_id>', methods=['POST'])
 def create_planeta_favorito(planeta_id):
     request_body=request.json
-    # planeta_favorito = Planeta.query.filter_by(id=planeta_id).first()
+   
     planeta_favorito = Favorito(usuario_id=request_body["usuario_id"],planeta_id = planeta_id)
 
     db.session.add(planeta_favorito)
@@ -192,10 +192,10 @@ def create_planeta_favorito(planeta_id):
 @app.route('/favorite/planeta/<int:planeta_id>', methods=['DELETE'])
 def delete_planeta_favorito(planeta_id):
     request_body=request.json
-    # planeta_favorito = Planeta.query.filter_by(id=planeta_id).first()
-    planeta_favorito = Favorito(usuario_id=request_body["usuario_id"],planeta_id = planeta_id)
+    
+    favorito_planeta_query = Favorito.query.filter_by(usuario_id=request_body["usuario_id"]).first()
 
-    db.session.delete(planeta_favorito)
+    db.session.delete(favorito_planeta_query)
     db.session.commit()
   
     response_body = {
@@ -222,10 +222,10 @@ def create_personaje_favorito(personaje_id):
 @app.route('/favorite/personaje/<int:personaje_id>', methods=['DELETE'])
 def delete_personaje_favorito(personaje_id):
     request_body=request.json
-    # planeta_favorito = Planeta.query.filter_by(id=planeta_id).first()
-    personaje_favorito = Favorito(usuario_id=request_body["usuario_id"],personaje_id = personaje_id)
 
-    db.session.delete(personaje_favorito)
+    favorito_personaje_query = Favorito.query.filter_by(usuario_id=request_body["usuario_id"]).first()
+
+    db.session.delete(favorito_personaje_query)
     db.session.commit()
   
     response_body = {
