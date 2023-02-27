@@ -193,7 +193,7 @@ def create_planeta_favorito(planeta_id):
 def delete_planeta_favorito(planeta_id):
     request_body=request.json
     
-    favorito_planeta_query = Favorito.query.filter_by(usuario_id=request_body["usuario_id"]).first()
+    favorito_planeta_query = Favorito.query.filter_by(usuario_id=request_body["usuario_id"],planeta_id=planeta_id).first()
 
     db.session.delete(favorito_planeta_query)
     db.session.commit()
@@ -223,7 +223,7 @@ def create_personaje_favorito(personaje_id):
 def delete_personaje_favorito(personaje_id):
     request_body=request.json
 
-    favorito_personaje_query = Favorito.query.filter_by(usuario_id=request_body["usuario_id"]).first()
+    favorito_personaje_query = Favorito.query.filter_by(usuario_id=request_body["usuario_id"],personaje_id=personaje_id).first()
 
     db.session.delete(favorito_personaje_query)
     db.session.commit()
