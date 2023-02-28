@@ -9,7 +9,6 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User , Personaje , Planeta , Favorito
-#from models import Person
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -207,7 +206,7 @@ def delete_planeta_favorito(planeta_id):
 @app.route('/favorite/personaje/<int:personaje_id>', methods=['POST'])
 def create_personaje_favorito(personaje_id):
     request_body=request.json
-    # planeta_favorito = Planeta.query.filter_by(id=planeta_id).first()
+   
     personaje_favorito = Favorito(usuario_id=request_body["usuario_id"],personaje_id = personaje_id)
 
     db.session.add(personaje_favorito)
